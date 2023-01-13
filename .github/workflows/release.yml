@@ -11,6 +11,6 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-    uses: ryansonshine/ryansonshine/.github/workflows/release.yml@main
+    uses: Atry/ryansonshine/.github/workflows/release.yml@generate-readme
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
