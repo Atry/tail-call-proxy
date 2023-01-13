@@ -183,10 +183,22 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
     )
   );
 
+/**
+ * Returns an proxy object whose underlying object will be lazily created
+ * at the first time its properties or methods are used.
+ *
+ * @param tailCall the function to create the underlying object
+ */
 export function lazy<T extends object>(tailCall: () => T): T {
   return new Proxy({ tailCall }, LAZY_PROXY_HANDLER) as T;
 }
 
+/**
+ * Returns either an proxy object whose underlying object will be created in
+ * a queue, or just the underlying object if the queue is empty.
+ *
+ * @param tailCall the function to create the underlying object
+ */
 export function parasitic<T extends object>(tailCall: () => T): T {
   const target: ProxyTarget<T> = { tailCall };
   if (isRunning) {
