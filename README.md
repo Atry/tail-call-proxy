@@ -66,7 +66,7 @@ at the first time its properties or methods are used.
 
 #### Defined in
 
-[index.ts:192](https://github.com/Atry/tail-call-proxy/blob/0b578c1/src/index.ts#L192)
+[index.ts:192](https://github.com/Atry/tail-call-proxy/blob/08832a0/src/index.ts#L192)
 
 ___
 
@@ -95,4 +95,4 @@ a queue, or just the underlying object if the queue is empty.
 
 #### Defined in
 
-[index.ts:202](https://github.com/Atry/tail-call-proxy/blob/0b578c1/src/index.ts#L202)
+[index.ts:202](https://github.com/Atry/tail-call-proxy/blob/08832a0/src/index.ts#L202)
