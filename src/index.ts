@@ -188,23 +188,24 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * at the first time its properties or methods are used.
  *
  * @param tailCall the function to create the underlying object
- * @example The `initializer` should not be called until the first to access
- *   `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
- *   the second access would not trigger the `initializer`.
+ * @example
+ * The `initializer` should not be called until the first to access
+ * `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
+ * the second access would not trigger the `initializer`.
  *
- *   ```typescript doctest
- *   import { lazy } from 'tail-call-proxy';
+ * ```typescript doctest
+ * import { lazy } from 'tail-call-proxy';
  *
- *   const initializer = jest.fn(() => ({ hello: 'world' }))
- *   const lazyObject = lazy(initializer);
- *   expect(initializer).not.toHaveBeenCalled()
+ * const initializer = jest.fn(() => ({ hello: 'world' }))
+ * const lazyObject = lazy(initializer);
+ * expect(initializer).not.toHaveBeenCalled()
  *
- *   expect(lazyObject.hello).toBe('world');
- *   expect(initializer).toHaveBeenCalledTimes(1);
+ * expect(lazyObject.hello).toBe('world');
+ * expect(initializer).toHaveBeenCalledTimes(1);
  *
- *   expect(lazyObject.hello).toBe('world');
- *   expect(initializer).toHaveBeenCalledTimes(1);
- *   ```
+ * expect(lazyObject.hello).toBe('world');
+ * expect(initializer).toHaveBeenCalledTimes(1);
+ * ```
  *
  */
 export function lazy<T extends object>(tailCall: () => T): T {
