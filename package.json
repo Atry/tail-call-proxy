@@ -118,5 +118,9 @@
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
+  },
+  "dependencies": {
+    "typedoc": "^0.23.24",
+    "typedoc-plugin-markdown": "^3.14.0"
   }
 }
