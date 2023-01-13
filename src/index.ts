@@ -1,4 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
+
+/**
+ * Delayed initialized objects that support tail-call optimization.
+ * @module
+ */
+
 type ProxyTarget<T extends object> = {
   tailCall?: () => T;
   tail?: ProxyTarget<T>;
