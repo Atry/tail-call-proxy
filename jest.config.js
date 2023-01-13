@@ -16,5 +16,6 @@ module.exports = {
       isolatedModules: true,
     },
   },
+  modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
