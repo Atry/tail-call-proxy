@@ -8,9 +8,9 @@ type ProxyTarget<T extends object> = {
 
 function getResult<T extends object>(target: ProxyTarget<T>): T {
   if ('result' in target) {
-    return target['result'] as T;
+    return target.result as T;
   } else if ('error' in target) {
-    throw target['error'];
+    throw target.error;
   } else {
     run(target);
     return getResult(target);
@@ -125,8 +125,8 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
                       receiver
                     );
                     if (typeof property === 'function') {
-                      return function (this: any, ...argArray: any[]): any {
-                        Reflect.apply(
+                      return function (this: any, ...argArray: any[]): unknown {
+                        return Reflect.apply(
                           property,
                           this === receiver ? result : this,
                           argArray

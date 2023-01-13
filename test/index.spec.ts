@@ -3,14 +3,14 @@ import { parasitic, lazy } from '../src';
 describe('index', () => {
   describe('parasitic', () => {
     it('should actually return a number from a number recursive function', () => {
-      function go(i: number): { x: number } {
+      function go(i: number): number {
         if (i < 1000000) {
           return parasitic(() => go(i + 1));
         } else {
-          return { x: 42 };
+          return new Number(42);
         }
       }
-      expect(go(0).x).toBe(42);
+      expect(go(0).valueOf()).toBe(42);
     });
 
     it('should actually return numbers from nested number recursive functions', () => {
@@ -37,6 +37,16 @@ describe('index', () => {
     });
   });
   describe('lazy', () => {
+    it('should actually return a number from a number recursive function', () => {
+      function go(i: number): number {
+        if (i < 1000000) {
+          return lazy(() => go(i + 1));
+        } else {
+          return new Number(42);
+        }
+      }
+      expect(go(0).valueOf()).toBe(42);
+    });
     it('should not throw a stack overflow error from an asynchronous recursive functions', async () => {
       async function go(i: number): Promise<number> {
         if (i < 3) {
