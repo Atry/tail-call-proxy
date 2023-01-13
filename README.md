@@ -45,6 +45,9 @@ Delayed initialized objects that support tail-call optimization.
 
 ▸ **lazy**<`T`\>(`tailCall`): `T`
 
+Returns an proxy object whose underlying object will be lazily created
+at the first time its properties or methods are used.
+
 #### Type parameters
 
 | Name | Type |
@@ -53,9 +56,9 @@ Delayed initialized objects that support tail-call optimization.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `tailCall` | () => `T` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tailCall` | () => `T` | the function to create the underlying object |
 
 #### Returns
 
@@ -63,7 +66,7 @@ Delayed initialized objects that support tail-call optimization.
 
 #### Defined in
 
-[index.ts:186](https://github.com/Atry/tail-call-proxy/blob/ca241fd/src/index.ts#L186)
+[index.ts:192](https://github.com/Atry/tail-call-proxy/blob/3d72e1c/src/index.ts#L192)
 
 ___
 
@@ -71,6 +74,9 @@ ___
 
 ▸ **parasitic**<`T`\>(`tailCall`): `T`
 
+Returns either an proxy object whose underlying object will be created in
+a queue, or just the underlying object if the queue is empty.
+
 #### Type parameters
 
 | Name | Type |
@@ -79,9 +85,9 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `tailCall` | () => `T` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tailCall` | () => `T` | the function to create the underlying object |
 
 #### Returns
 
@@ -89,4 +95,4 @@ ___
 
 #### Defined in
 
-[index.ts:190](https://github.com/Atry/tail-call-proxy/blob/ca241fd/src/index.ts#L190)
+[index.ts:202](https://github.com/Atry/tail-call-proxy/blob/3d72e1c/src/index.ts#L202)
