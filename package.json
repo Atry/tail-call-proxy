@@ -15,6 +15,7 @@
     "semantic-release": "semantic-release",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
+    "pretest": "typedoc && concat-md --toc --decrease-title-levels --dir-name-as-title docs > README.md && ts-doctest . test",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
