@@ -120,3 +120,6 @@ lib/
 
 # TypeDoc
 docs/
+
+# typescript-doctest
+/test/doc/
