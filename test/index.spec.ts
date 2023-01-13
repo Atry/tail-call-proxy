@@ -3,7 +3,8 @@ import { parasitic, lazy } from '../src';
 describe('index', () => {
   describe('parasitic', () => {
     it('should actually return a number from a number recursive function', () => {
-      function go(i: number): number {
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      function go(i: number): Number {
         if (i < 1000000) {
           return parasitic(() => go(i + 1));
         } else {
@@ -38,7 +39,8 @@ describe('index', () => {
   });
   describe('lazy', () => {
     it('should actually return a number from a number recursive function', () => {
-      function go(i: number): number {
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      function go(i: number): Number {
         if (i < 1000000) {
           return lazy(() => go(i + 1));
         } else {
