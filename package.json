@@ -120,6 +120,7 @@
     ]
   },
   "dependencies": {
+    "concat-md": "^0.5.0",
     "typedoc": "^0.23.24",
     "typedoc-plugin-markdown": "^3.14.0"
   }
