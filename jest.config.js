@@ -1,3 +1,7 @@
+const { pathsToModuleNameMapper } = require('ts-jest');
+const requireJSON5 = require('require-json5');
+const { compilerOptions } = requireJSON5('./tsconfig.json');
+
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -12,4 +16,5 @@ module.exports = {
       isolatedModules: true,
     },
   },
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
