@@ -5,5 +5,6 @@
   "hideInPageTOC": true,
   "hideBreadcrumbs": true,
   "readme": "none",
-  "entryPoints": ["./src"]
+  "entryPoints": ["./src"],
+  "tsconfig": "./tsconfig.build.json"
 }
