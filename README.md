@@ -156,7 +156,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/cef772d/src/index.ts#L282)
+[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/7163762/src/index.ts#L282)
 
 ___
 
@@ -164,8 +164,7 @@ ___
 
 ▸ **parasitic**<`T`\>(`tailCall`): `T`
 
-Returns either an proxy object whose underlying object will be created in
-a queue, or just the underlying object if the queue is empty.
+Performs a tail call as soon as possible.
 
 **`Example`**
 
@@ -250,6 +249,11 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 
 `T`
 
+either directly the object returned by `tailCall`, or a proxy
+object if there is any other running tail calls. When a proxy object is
+returned, the underlying object will be created after all the previous tail
+calls are finished.
+
 #### Defined in
 
-[index.ts:359](https://github.com/Atry/tail-call-proxy/blob/cef772d/src/index.ts#L359)
+[index.ts:363](https://github.com/Atry/tail-call-proxy/blob/7163762/src/index.ts#L363)
