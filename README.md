@@ -78,15 +78,19 @@ Note that errors thrown in the initializer will be delayed as well.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-// No error is thrown, given the underlying object have not been created yet.
-const lazyError: Record<string, unknown> = lazy(() => {
- throw new Error();
+const initializer = jest.fn(() => {
+  throw new Error();
 });
 
-expect(() => lazyError.toString()).toThrow();
+// No error is thrown, given the underlying object have not been created yet.
+const lazyError: Record<string, unknown> = lazy(initializer);
+expect(initializer).not.toHaveBeenCalled();
 
-// The same error instance
+expect(() => lazyError.toString()).toThrow();
+expect(initializer).toHaveBeenCalledTimes(1);
+
 expect(() => lazyError.toLocaleString()).toThrow();
+expect(initializer).toHaveBeenCalledTimes(1);
 ```
 
 **`Example`**
@@ -152,7 +156,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:278](https://github.com/Atry/tail-call-proxy/blob/8dc5316/src/index.ts#L278)
+[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/a88f607/src/index.ts#L282)
 
 ___
 
@@ -208,7 +212,7 @@ try {
   // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
   // `isOdd` immediately.
   const is1000000Even = isEven(1000000);
-  expect(isOdd).toHaveBeenCalledTimes(0);
+  expect(isOdd).not.toHaveBeenCalled();
   expect(isEven).toHaveBeenCalledTimes(1);
 
   // `valueOf` triggers the rest of the recursion.
@@ -248,4 +252,4 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 
 #### Defined in
 
-[index.ts:355](https://github.com/Atry/tail-call-proxy/blob/8dc5316/src/index.ts#L355)
+[index.ts:359](https://github.com/Atry/tail-call-proxy/blob/a88f607/src/index.ts#L359)
