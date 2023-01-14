@@ -310,7 +310,7 @@ export function lazy<T extends object>(tailCall: () => T): T {
  *
  * @example
  *
- * `parasitic` is useful when you need tail call optimization will you don't
+ * `parasitic` is useful when you need tail call optimization while you don't
  * need the lazy evaluation. It can be used together with {@link lazy}
  * alternately.
  *
