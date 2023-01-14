@@ -73,6 +73,24 @@ expect(initializer).toHaveBeenCalledTimes(1);
 
 **`Example`**
 
+Note that errors thrown in the initializer will be delayed as well.
+
+```typescript doctest
+import { lazy } from 'tail-call-proxy';
+
+// No error is thrown, given the underlying object have not been created yet.
+const lazyError: Record<string, unknown> = lazy(() => {
+ throw new Error();
+});
+
+expect(() => lazyError.toString()).toThrow();
+
+// The same error instance
+expect(() => lazyError.toLocaleString()).toThrow();
+```
+
+**`Example`**
+
 The following mutual recursive functions would result in stack overflow:
 
 ```typescript doctest
@@ -143,7 +161,7 @@ a queue, or just the underlying object if the queue is empty.
 
 **`Example`**
 
-Unlike [lazy](#lazy), `parasitic` perform the initialization as soon as
+Unlike [lazy](#lazy), `parasitic` performs the initialization as soon as
 possible:
 
 ```typescript doctest
