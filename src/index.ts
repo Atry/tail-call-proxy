@@ -266,6 +266,74 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * a queue, or just the underlying object if the queue is empty.
  *
  * @param tailCall the function to create the underlying object
+ *
+ * @example
+ *
+ * Unlike {@link lazy}, `parasitic` perform the initialization as soon as
+ * possible:
+ *
+ * ```typescript doctest
+ * import { parasitic } from 'tail-call-proxy';
+ *
+ * const initializer = jest.fn(() => ({ hello: 'world' }))
+ * const lazyObject = parasitic(initializer);
+ * expect(initializer).toHaveBeenCalledTimes(1)
+ *
+ * expect(lazyObject.hello).toBe('world');
+ * expect(initializer).toHaveBeenCalledTimes(1);
+ *
+ * expect(lazyObject.hello).toBe('world');
+ * expect(initializer).toHaveBeenCalledTimes(1);
+ * ```
+ *
+ * @example
+ *
+ * `parasitic` is useful when you need tail call optimization will you don't
+ * need the lazy evaluation. It can be used together with {@link lazy}
+ * alternately.
+ *
+ * ```typescript doctest
+ * import { lazy, parasitic } from 'tail-call-proxy';
+ * function isEven(n: number): Boolean {
+ *   if (n === 0) {
+ *     return new Boolean(true);
+ *   }
+ *   return lazy(() => isOdd(n - 1));
+ * }
+ *
+ * function isOdd(n: number): Boolean {
+ *   if (n === 0) {
+ *     return new Boolean(false);
+ *   }
+ *   return parasitic(() => isEven(n - 1));
+ * }
+ *
+ * isEven = jest.fn(isEven);
+ * isOdd = jest.fn(isOdd);
+ *
+ * // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
+ * // `isOdd` immediately.
+ * const is1000000Even = isEven(1000000);
+ * expect(isOdd).toHaveBeenCalledTimes(0);
+ * expect(isEven).toHaveBeenCalledTimes(1);
+ *
+ * // `valueOf` triggers the rest of the recursion.
+ * expect(is1000000Even.valueOf()).toBe(true);
+ * expect(isOdd).toHaveBeenCalledTimes(500000);
+ * expect(isEven).toHaveBeenCalledTimes(500001);
+ *
+ * isEven.mockClear();
+ * isOdd.mockClear();
+ *
+ * // `isOdd` is called, in which `parasitic(() => isEven(n - 1))` triggers the
+ * // rest of the recursion immediately.
+ * const is1000000Odd = isOdd(1000000);
+ * expect(isOdd).toHaveBeenCalledTimes(500001);
+ * expect(isEven).toHaveBeenCalledTimes(500000);
+ * expect(is1000000Odd.valueOf()).toBe(false);
+ * expect(isOdd).toHaveBeenCalledTimes(500001);
+ * expect(isEven).toHaveBeenCalledTimes(500000);
+ * ```
  */
 export function parasitic<T extends object>(tailCall: () => T): T {
   const target: ProxyTarget<T> = { tailCall };

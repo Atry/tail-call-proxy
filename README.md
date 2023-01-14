@@ -57,7 +57,7 @@ The `initializer` should not be called until the first to access
 `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
 the second access would not trigger the `initializer`.
 
-``` typescript doctest
+```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
 const initializer = jest.fn(() => ({ hello: 'world' }))
@@ -75,7 +75,7 @@ expect(initializer).toHaveBeenCalledTimes(1);
 
 The following mutual recursive functions would result in stack overflow:
 
-``` typescript doctest
+```typescript doctest
 import { lazy } from 'tail-call-proxy';
 function isEven(n: number): Boolean {
   if (n === 0) {
@@ -91,13 +91,13 @@ function isOdd(n: number): Boolean {
   return isEven(n - 1);
 }
 
-expect(isOdd(1000000).valueOf()).toBe(false)
+expect(() => isOdd(1000000)).toThrow();
 ```
 
 However, if you replace `return xxx` with `return lazy(() => xxx)`, it will
 use a constant size of stack memory and avoid the stack overflow.
 
-``` typescript doctest
+```typescript doctest
 import { lazy } from 'tail-call-proxy';
 function isEven(n: number): Boolean {
   if (n === 0) {
@@ -134,7 +134,7 @@ expect(isOdd(1000000).valueOf()).toBe(false)
 
 #### Defined in
 
-[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/ecc8dcc/src/index.ts#L260)
+[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/a8ca06c/src/index.ts#L260)
 
 ___
 
@@ -144,6 +144,74 @@ ___
 
 Returns either an proxy object whose underlying object will be created in
 a queue, or just the underlying object if the queue is empty.
+
+**`Example`**
+
+Unlike [lazy](#lazy), `parasitic` perform the initialization as soon as
+possible:
+
+```typescript doctest
+import { parasitic } from 'tail-call-proxy';
+
+const initializer = jest.fn(() => ({ hello: 'world' }))
+const lazyObject = parasitic(initializer);
+expect(initializer).toHaveBeenCalledTimes(1)
+
+expect(lazyObject.hello).toBe('world');
+expect(initializer).toHaveBeenCalledTimes(1);
+
+expect(lazyObject.hello).toBe('world');
+expect(initializer).toHaveBeenCalledTimes(1);
+```
+
+**`Example`**
+
+`parasitic` is useful when you need tail call optimization will you don't
+need the lazy evaluation. It can be used together with [lazy](#lazy)
+alternately.
+
+```typescript doctest
+import { lazy, parasitic } from 'tail-call-proxy';
+function isEven(n: number): Boolean {
+  if (n === 0) {
+    return new Boolean(true);
+  }
+  return lazy(() => isOdd(n - 1));
+}
+
+function isOdd(n: number): Boolean {
+  if (n === 0) {
+    return new Boolean(false);
+  }
+  return parasitic(() => isEven(n - 1));
+}
+
+isEven = jest.fn(isEven);
+isOdd = jest.fn(isOdd);
+
+// `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
+// `isOdd` immediately.
+const is1000000Even = isEven(1000000);
+expect(isOdd).toHaveBeenCalledTimes(0);
+expect(isEven).toHaveBeenCalledTimes(1);
+
+// `valueOf` triggers the rest of the recursion.
+expect(is1000000Even.valueOf()).toBe(true);
+expect(isOdd).toHaveBeenCalledTimes(500000);
+expect(isEven).toHaveBeenCalledTimes(500001);
+
+isEven.mockClear();
+isOdd.mockClear();
+
+// `isOdd` is called, in which `parasitic(() => isEven(n - 1))` triggers the
+// rest of the recursion immediately.
+const is1000000Odd = isOdd(1000000);
+expect(isOdd).toHaveBeenCalledTimes(500001);
+expect(isEven).toHaveBeenCalledTimes(500000);
+expect(is1000000Odd.valueOf()).toBe(false);
+expect(isOdd).toHaveBeenCalledTimes(500001);
+expect(isEven).toHaveBeenCalledTimes(500000);
+```
 
 #### Type parameters
 
@@ -163,4 +231,4 @@ a queue, or just the underlying object if the queue is empty.
 
 #### Defined in
 
-[index.ts:270](https://github.com/Atry/tail-call-proxy/blob/ecc8dcc/src/index.ts#L270)
+[index.ts:338](https://github.com/Atry/tail-call-proxy/blob/a8ca06c/src/index.ts#L338)
