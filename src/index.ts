@@ -198,7 +198,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
  * the second access would not trigger the `initializer`.
  *
- * ``` typescript doctest
+ * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  *
  * const initializer = jest.fn(() => ({ hello: 'world' }))
@@ -216,7 +216,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  *
  * The following mutual recursive functions would result in stack overflow:
  *
- * ``` typescript doctest
+ * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  * function isEven(n: number): Boolean {
  *   if (n === 0) {
@@ -232,13 +232,13 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  *   return isEven(n - 1);
  * }
  *
- * expect(isOdd(1000000).valueOf()).toBe(false)
+ * expect(() => isOdd(1000000)).toThrow();
  * ```
  *
  * However, if you replace `return xxx` with `return lazy(() => xxx)`, it will
  * use a constant size of stack memory and avoid the stack overflow.
  *
- * ``` typescript doctest
+ * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  * function isEven(n: number): Boolean {
  *   if (n === 0) {
