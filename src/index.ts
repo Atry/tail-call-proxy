@@ -154,16 +154,44 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
                       propertyKey,
                       receiver
                     );
-                    if (typeof property === 'function') {
-                      return function (this: any, ...argArray: any[]): unknown {
-                        return Reflect.apply(
-                          property,
-                          this === receiver ? result : this,
-                          argArray
-                        );
-                      };
-                    } else {
-                      return property;
+                    switch (typeof property) {
+                      case 'function': {
+                        const wrappedFunction = function (
+                          this: any,
+                          ...argArray: any[]
+                        ): unknown {
+                          return Reflect.apply(
+                            property,
+                            this === receiver ? result : this,
+                            argArray
+                          );
+                        };
+                        Object.defineProperty(wrappedFunction, 'name', {
+                          value: property.name,
+                          writable: false,
+                        });
+                        return wrappedFunction;
+                      }
+                      case 'undefined':
+                        switch (propertyKey) {
+                          case Symbol.toStringTag:
+                            return result.constructor.name;
+                          case Symbol.toPrimitive:
+                            return (hint: 'string' | 'number' | 'default') => {
+                              switch (hint) {
+                                case 'string':
+                                  return String(result);
+                                case 'number':
+                                  return Number(result);
+                                case 'default':
+                                  return result.valueOf();
+                              }
+                            };
+                          default:
+                            return property;
+                        }
+                      default:
+                        return property;
                     }
                   }
                 }
@@ -330,10 +358,12 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * import { lazy, parasitic } from 'tail-call-proxy';
  *
  * let isEvenCounter = 0;
+ * const trueObject = new Boolean(true);
+ * const falseObject = new Boolean(false);
  * function isEven(n: number): Boolean {
  *   isEvenCounter++;
  *   if (n === 0) {
- *     return new Boolean(true);
+ *     return trueObject;
  *   }
  *   return lazy(() => isOdd(n - 1));
  * };
@@ -342,7 +372,7 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * function isOdd(n: number): Boolean {
  *   isOddCounter++;
  *   if (n === 0) {
- *     return new Boolean(false);
+ *     return falseObject;
  *   }
  *   return parasitic(() => isEven(n - 1));
  * };
@@ -358,6 +388,11 @@ export function lazy<T extends object>(tailCall: () => T): T {
  *   expect(is1000000Even.valueOf()).toBe(true);
  *   expect(isOddCounter).toBe(500000);
  *   expect(isEvenCounter).toBe(500001);
+ *
+ *   // `is1000000Even` is a lazy proxy backed by `trueObject`, not the exactly
+ *   // same object of `trueObject`.
+ *   expect(is1000000Even).not.toStrictEqual(trueObject);
+ *   expect(is1000000Even).toEqual(trueObject);
  * } finally {
  *   isEvenCounter = 0;
  *   isOddCounter = 0;
@@ -371,6 +406,10 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * expect(is1000000Odd.valueOf()).toBe(false);
  * expect(isOddCounter).toBe(500001);
  * expect(isEvenCounter).toBe(500000);
+ *
+ * // `is1000000Odd` is exactly the same object of `falseObject`, not a lazy
+ * // proxy.
+ * expect(is1000000Odd).toStrictEqual(falseObject);
  * ```
  */
 export function parasitic<T extends object>(tailCall: () => T): T {
