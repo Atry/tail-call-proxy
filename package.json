@@ -33,7 +33,7 @@
     "typedoc:watch": "typedoc --watch",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
-    "pretest": "typedoc && npx concat-md && npx ts-doctest",
+    "pretest": "typedoc && npm run concat-md && npm run ts-doctest",
     "watch": "npm-run-all --race --parallel *:watch",
     "typecheck": "tsc --noEmit"
   },
