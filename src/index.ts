@@ -187,13 +187,18 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * Returns an proxy object whose underlying object will be lazily created
  * at the first time its properties or methods are used.
  *
+ * `lazy` can eliminate tail calls, preventing stack overflow errors for in
+ * tail recursive functions or mutual recursive functions.
+ *
  * @param tailCall the function to create the underlying object
+ *
  * @example
+ *
  * The `initializer` should not be called until the first to access
  * `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
  * the second access would not trigger the `initializer`.
  *
- * ```typescript doctest
+ * ``` typescript doctest
  * import { lazy } from 'tail-call-proxy';
  *
  * const initializer = jest.fn(() => ({ hello: 'world' }))
@@ -207,6 +212,50 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * expect(initializer).toHaveBeenCalledTimes(1);
  * ```
  *
+ * @example
+ *
+ * The following mutual recursive functions would result in stack overflow:
+ *
+ * ``` typescript doctest
+ * import { lazy } from 'tail-call-proxy';
+ * function isEven(n: number): Boolean {
+ *   if (n === 0) {
+ *     return new Boolean(true);
+ *   }
+ *   return isOdd(n - 1);
+ * }
+ *
+ * function isOdd(n: number): Boolean {
+ *   if (n === 0) {
+ *     return new Boolean(false);
+ *   }
+ *   return isEven(n - 1);
+ * }
+ *
+ * expect(isOdd(1000000).valueOf()).toBe(false)
+ * ```
+ *
+ * However, if you replace `return xxx` with `return lazy(() => xxx)`, it will
+ * use a constant size of stack memory and avoid the stack overflow.
+ *
+ * ``` typescript doctest
+ * import { lazy } from 'tail-call-proxy';
+ * function isEven(n: number): Boolean {
+ *   if (n === 0) {
+ *     return new Boolean(true);
+ *   }
+ *   return lazy(() => isOdd(n - 1));
+ * }
+ *
+ * function isOdd(n: number): Boolean {
+ *   if (n === 0) {
+ *     return new Boolean(false);
+ *   }
+ *   return lazy(() => isEven(n - 1));
+ * }
+ *
+ * expect(isOdd(1000000).valueOf()).toBe(false)
+ * ```
  */
 export function lazy<T extends object>(tailCall: () => T): T {
   return new Proxy({ tailCall }, LAZY_PROXY_HANDLER) as T;

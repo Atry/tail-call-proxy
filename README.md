@@ -48,13 +48,16 @@ Delayed initialized objects that support tail-call optimization.
 Returns an proxy object whose underlying object will be lazily created
 at the first time its properties or methods are used.
 
+`lazy` can eliminate tail calls, preventing stack overflow errors for in
+tail recursive functions or mutual recursive functions.
+
 **`Example`**
 
 The `initializer` should not be called until the first to access
 `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
 the second access would not trigger the `initializer`.
 
-```typescript doctest
+``` typescript doctest
 import { lazy } from 'tail-call-proxy';
 
 const initializer = jest.fn(() => ({ hello: 'world' }))
@@ -66,6 +69,51 @@ expect(initializer).toHaveBeenCalledTimes(1);
 
 expect(lazyObject.hello).toBe('world');
 expect(initializer).toHaveBeenCalledTimes(1);
+```
+
+**`Example`**
+
+The following mutual recursive functions would result in stack overflow:
+
+``` typescript doctest
+import { lazy } from 'tail-call-proxy';
+function isEven(n: number): Boolean {
+  if (n === 0) {
+    return new Boolean(true);
+  }
+  return isOdd(n - 1);
+}
+
+function isOdd(n: number): Boolean {
+  if (n === 0) {
+    return new Boolean(false);
+  }
+  return isEven(n - 1);
+}
+
+expect(isOdd(1000000).valueOf()).toBe(false)
+```
+
+However, if you replace `return xxx` with `return lazy(() => xxx)`, it will
+use a constant size of stack memory and avoid the stack overflow.
+
+``` typescript doctest
+import { lazy } from 'tail-call-proxy';
+function isEven(n: number): Boolean {
+  if (n === 0) {
+    return new Boolean(true);
+  }
+  return lazy(() => isOdd(n - 1));
+}
+
+function isOdd(n: number): Boolean {
+  if (n === 0) {
+    return new Boolean(false);
+  }
+  return lazy(() => isEven(n - 1));
+}
+
+expect(isOdd(1000000).valueOf()).toBe(false)
 ```
 
 #### Type parameters
@@ -86,7 +134,7 @@ expect(initializer).toHaveBeenCalledTimes(1);
 
 #### Defined in
 
-[index.ts:211](https://github.com/Atry/tail-call-proxy/blob/090983f/src/index.ts#L211)
+[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/ecc8dcc/src/index.ts#L260)
 
 ___
 
@@ -115,4 +163,4 @@ a queue, or just the underlying object if the queue is empty.
 
 #### Defined in
 
-[index.ts:221](https://github.com/Atry/tail-call-proxy/blob/090983f/src/index.ts#L221)
+[index.ts:270](https://github.com/Atry/tail-call-proxy/blob/ecc8dcc/src/index.ts#L270)
