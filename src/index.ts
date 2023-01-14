@@ -269,7 +269,7 @@ export function lazy<T extends object>(tailCall: () => T): T {
  *
  * @example
  *
- * Unlike {@link lazy}, `parasitic` perform the initialization as soon as
+ * Unlike {@link lazy}, `parasitic` performs the initialization as soon as
  * possible:
  *
  * ```typescript doctest
