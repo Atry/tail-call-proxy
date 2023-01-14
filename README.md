@@ -132,10 +132,6 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 `T`
 
-#### Defined in
-
-[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/25ec6a7/src/index.ts#L260)
-
 ___
 
 ### parasitic
@@ -227,7 +223,3 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 #### Returns
 
 `T`
-
-#### Defined in
-
-[index.ts:337](https://github.com/Atry/tail-call-proxy/blob/25ec6a7/src/index.ts#L337)
