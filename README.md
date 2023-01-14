@@ -5,13 +5,7 @@
 - [tail-call-proxy](#tail-call-proxy)
   - [Functions](#functions)
     - [lazy](#lazy)
-      - [Type parameters](#type-parameters)
-      - [Parameters](#parameters)
-      - [Returns](#returns)
     - [parasitic](#parasitic)
-      - [Type parameters](#type-parameters-1)
-      - [Parameters](#parameters-1)
-      - [Returns](#returns-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
