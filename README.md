@@ -134,7 +134,7 @@ expect(isOdd(1000000).valueOf()).toBe(false)
 
 #### Defined in
 
-[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/a8ca06c/src/index.ts#L260)
+[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/e16be9c/src/index.ts#L260)
 
 ___
 
@@ -231,4 +231,4 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 
 #### Defined in
 
-[index.ts:338](https://github.com/Atry/tail-call-proxy/blob/a8ca06c/src/index.ts#L338)
+[index.ts:338](https://github.com/Atry/tail-call-proxy/blob/e16be9c/src/index.ts#L338)
