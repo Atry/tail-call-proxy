@@ -187,7 +187,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * Returns an proxy object whose underlying object will be lazily created
  * at the first time its properties or methods are used.
  *
- * `lazy` can eliminate tail calls, preventing stack overflow errors in  tail
+ * `lazy` can eliminate tail calls, preventing stack overflow errors in tail
  * recursive functions or mutual recursive functions.
  *
  * @param tailCall the function to create the underlying object
