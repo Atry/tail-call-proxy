@@ -156,7 +156,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/7163762/src/index.ts#L282)
+[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/67977e3/src/index.ts#L282)
 
 ___
 
@@ -256,4 +256,4 @@ calls are finished.
 
 #### Defined in
 
-[index.ts:363](https://github.com/Atry/tail-call-proxy/blob/7163762/src/index.ts#L363)
+[index.ts:363](https://github.com/Atry/tail-call-proxy/blob/67977e3/src/index.ts#L363)
