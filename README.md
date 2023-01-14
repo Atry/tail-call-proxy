@@ -45,7 +45,7 @@ Delayed initialized objects that support tail-call optimization.
 
 ▸ **lazy**<`T`\>(`tailCall`): `T`
 
-Returns an proxy object whose underlying object will be lazily created
+Returns an proxy object backed by `tailCall`, which will be lazily created
 at the first time its properties or methods are used.
 
 `lazy` can eliminate tail calls, preventing stack overflow errors in tail
@@ -161,7 +161,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:287](https://github.com/Atry/tail-call-proxy/blob/bd1d28a/src/index.ts#L287)
+[index.ts:287](https://github.com/Atry/tail-call-proxy/blob/728a91e/src/index.ts#L287)
 
 ___
 
@@ -170,6 +170,11 @@ ___
 ▸ **parasitic**<`T`\>(`tailCall`): `T`
 
 Performs a tail call as soon as possible.
+
+`parasitic` returns either exactly the object returned by `tailCall`, or a
+proxy object backed by the object returned by `tailCall`, if there are any
+previously started pending tail calls. In the latter case, the underlying
+object will be created after all the previous tail calls are finished.
 
 **`Example`**
 
@@ -180,16 +185,16 @@ possible:
 import { parasitic } from 'tail-call-proxy';
 
 let counter = 0;
-const lazyObject = parasitic(() => {
+const parasiticObject = parasitic(() => {
   counter++;
   return { hello: 'world' };
 });
 expect(counter).toBe(1);
 
-expect(lazyObject.hello).toBe('world');
+expect(parasiticObject.hello).toBe('world');
 expect(counter).toBe(1);
 
-expect(lazyObject.hello).toBe('world');
+expect(parasiticObject.hello).toBe('world');
 expect(counter).toBe(1);
 ```
 
@@ -262,11 +267,6 @@ expect(isEvenCounter).toBe(500000);
 
 `T`
 
-either directly the object returned by `tailCall`, or a proxy
-object if there are any other running tail calls. When a proxy object is
-returned, the underlying object will be created after all the previous tail
-calls are finished.
-
 #### Defined in
 
-[index.ts:376](https://github.com/Atry/tail-call-proxy/blob/bd1d28a/src/index.ts#L376)
+[index.ts:376](https://github.com/Atry/tail-call-proxy/blob/728a91e/src/index.ts#L376)
