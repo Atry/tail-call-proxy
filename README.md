@@ -48,6 +48,26 @@ Delayed initialized objects that support tail-call optimization.
 Returns an proxy object whose underlying object will be lazily created
 at the first time its properties or methods are used.
 
+**`Example`**
+
+The `initializer` should not be called until the first to access
+`lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
+the second access would not trigger the `initializer`.
+
+```typescript doctest
+import { lazy } from 'tail-call-proxy';
+
+const initializer = jest.fn(() => ({ hello: 'world' }))
+const lazyObject = lazy(initializer);
+expect(initializer).not.toHaveBeenCalled()
+
+expect(lazyObject.hello).toBe('world');
+expect(initializer).toHaveBeenCalledTimes(1);
+
+expect(lazyObject.hello).toBe('world');
+expect(initializer).toHaveBeenCalledTimes(1);
+```
+
 #### Type parameters
 
 | Name | Type |
@@ -66,7 +86,7 @@ at the first time its properties or methods are used.
 
 #### Defined in
 
-[index.ts:192](https://github.com/Atry/tail-call-proxy/blob/12acd5d/src/index.ts#L192)
+[index.ts:211](https://github.com/Atry/tail-call-proxy/blob/090983f/src/index.ts#L211)
 
 ___
 
@@ -95,4 +115,4 @@ a queue, or just the underlying object if the queue is empty.
 
 #### Defined in
 
-[index.ts:202](https://github.com/Atry/tail-call-proxy/blob/12acd5d/src/index.ts#L202)
+[index.ts:221](https://github.com/Atry/tail-call-proxy/blob/090983f/src/index.ts#L221)
