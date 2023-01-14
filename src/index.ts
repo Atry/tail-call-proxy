@@ -201,7 +201,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  *
- * var counter = 0;
+ * let counter = 0;
  * const lazyObject = lazy(() => {
  *   counter++;
  *   return { hello: 'world' };
@@ -222,7 +222,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  *
- * var counter = 0;
+ * let counter = 0;
  *
  * // No error is thrown, given the underlying object have not been created yet.
  * const lazyError: Record<string, unknown> = lazy(() => {
