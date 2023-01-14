@@ -5,7 +5,13 @@
 - [tail-call-proxy](#tail-call-proxy)
   - [Functions](#functions)
     - [lazy](#lazy)
+      - [Type parameters](#type-parameters)
+      - [Parameters](#parameters)
+      - [Returns](#returns)
     - [parasitic](#parasitic)
+      - [Type parameters](#type-parameters-1)
+      - [Parameters](#parameters-1)
+      - [Returns](#returns-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -60,9 +66,9 @@ the second access would not trigger the `initializer`.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => ({ hello: 'world' }))
+const initializer = jest.fn(() => ({ hello: 'world' }));
 const lazyObject = lazy(initializer);
-expect(initializer).not.toHaveBeenCalled()
+expect(initializer).not.toHaveBeenCalled();
 
 expect(lazyObject.hello).toBe('world');
 expect(initializer).toHaveBeenCalledTimes(1);
@@ -113,7 +119,7 @@ function isOdd(n: number): Boolean {
   return lazy(() => isEven(n - 1));
 }
 
-expect(isOdd(1000000).valueOf()).toBe(false)
+expect(isOdd(1000000).valueOf()).toBe(false);
 ```
 
 #### Type parameters
@@ -132,10 +138,6 @@ expect(isOdd(1000000).valueOf()).toBe(false)
 
 `T`
 
-#### Defined in
-
-[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/e16be9c/src/index.ts#L260)
-
 ___
 
 ### parasitic
@@ -153,9 +155,9 @@ possible:
 ```typescript doctest
 import { parasitic } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => ({ hello: 'world' }))
+const initializer = jest.fn(() => ({ hello: 'world' }));
 const lazyObject = parasitic(initializer);
-expect(initializer).toHaveBeenCalledTimes(1)
+expect(initializer).toHaveBeenCalledTimes(1);
 
 expect(lazyObject.hello).toBe('world');
 expect(initializer).toHaveBeenCalledTimes(1);
@@ -172,36 +174,35 @@ alternately.
 
 ```typescript doctest
 import { lazy, parasitic } from 'tail-call-proxy';
-function isEven(n: number): Boolean {
+const isEven = jest.fn(function(n: number): Boolean {
   if (n === 0) {
     return new Boolean(true);
   }
   return lazy(() => isOdd(n - 1));
-}
+});
 
-function isOdd(n: number): Boolean {
+const isOdd = jest.fn(function(n: number): Boolean {
   if (n === 0) {
     return new Boolean(false);
   }
   return parasitic(() => isEven(n - 1));
+});
+
+try {
+  // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
+  // `isOdd` immediately.
+  const is1000000Even = isEven(1000000);
+  expect(isOdd).toHaveBeenCalledTimes(0);
+  expect(isEven).toHaveBeenCalledTimes(1);
+
+  // `valueOf` triggers the rest of the recursion.
+  expect(is1000000Even.valueOf()).toBe(true);
+  expect(isOdd).toHaveBeenCalledTimes(500000);
+  expect(isEven).toHaveBeenCalledTimes(500001);
+} finally {
+  isEven.mockClear();
+  isOdd.mockClear();
 }
-
-isEven = jest.fn(isEven);
-isOdd = jest.fn(isOdd);
-
-// `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
-// `isOdd` immediately.
-const is1000000Even = isEven(1000000);
-expect(isOdd).toHaveBeenCalledTimes(0);
-expect(isEven).toHaveBeenCalledTimes(1);
-
-// `valueOf` triggers the rest of the recursion.
-expect(is1000000Even.valueOf()).toBe(true);
-expect(isOdd).toHaveBeenCalledTimes(500000);
-expect(isEven).toHaveBeenCalledTimes(500001);
-
-isEven.mockClear();
-isOdd.mockClear();
 
 // `isOdd` is called, in which `parasitic(() => isEven(n - 1))` triggers the
 // rest of the recursion immediately.
@@ -228,7 +229,3 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 #### Returns
 
 `T`
-
-#### Defined in
-
-[index.ts:338](https://github.com/Atry/tail-call-proxy/blob/e16be9c/src/index.ts#L338)

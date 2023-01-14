@@ -201,9 +201,9 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  *
- * const initializer = jest.fn(() => ({ hello: 'world' }))
+ * const initializer = jest.fn(() => ({ hello: 'world' }));
  * const lazyObject = lazy(initializer);
- * expect(initializer).not.toHaveBeenCalled()
+ * expect(initializer).not.toHaveBeenCalled();
  *
  * expect(lazyObject.hello).toBe('world');
  * expect(initializer).toHaveBeenCalledTimes(1);
@@ -254,7 +254,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  *   return lazy(() => isEven(n - 1));
  * }
  *
- * expect(isOdd(1000000).valueOf()).toBe(false)
+ * expect(isOdd(1000000).valueOf()).toBe(false);
  * ```
  */
 export function lazy<T extends object>(tailCall: () => T): T {
@@ -275,9 +275,9 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * ```typescript doctest
  * import { parasitic } from 'tail-call-proxy';
  *
- * const initializer = jest.fn(() => ({ hello: 'world' }))
+ * const initializer = jest.fn(() => ({ hello: 'world' }));
  * const lazyObject = parasitic(initializer);
- * expect(initializer).toHaveBeenCalledTimes(1)
+ * expect(initializer).toHaveBeenCalledTimes(1);
  *
  * expect(lazyObject.hello).toBe('world');
  * expect(initializer).toHaveBeenCalledTimes(1);
@@ -294,36 +294,35 @@ export function lazy<T extends object>(tailCall: () => T): T {
  *
  * ```typescript doctest
  * import { lazy, parasitic } from 'tail-call-proxy';
- * function isEven(n: number): Boolean {
+ * const isEven = jest.fn(function(n: number): Boolean {
  *   if (n === 0) {
  *     return new Boolean(true);
  *   }
  *   return lazy(() => isOdd(n - 1));
- * }
+ * });
  *
- * function isOdd(n: number): Boolean {
+ * const isOdd = jest.fn(function(n: number): Boolean {
  *   if (n === 0) {
  *     return new Boolean(false);
  *   }
  *   return parasitic(() => isEven(n - 1));
+ * });
+ *
+ * try {
+ *   // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
+ *   // `isOdd` immediately.
+ *   const is1000000Even = isEven(1000000);
+ *   expect(isOdd).toHaveBeenCalledTimes(0);
+ *   expect(isEven).toHaveBeenCalledTimes(1);
+ *
+ *   // `valueOf` triggers the rest of the recursion.
+ *   expect(is1000000Even.valueOf()).toBe(true);
+ *   expect(isOdd).toHaveBeenCalledTimes(500000);
+ *   expect(isEven).toHaveBeenCalledTimes(500001);
+ * } finally {
+ *   isEven.mockClear();
+ *   isOdd.mockClear();
  * }
- *
- * isEven = jest.fn(isEven);
- * isOdd = jest.fn(isOdd);
- *
- * // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
- * // `isOdd` immediately.
- * const is1000000Even = isEven(1000000);
- * expect(isOdd).toHaveBeenCalledTimes(0);
- * expect(isEven).toHaveBeenCalledTimes(1);
- *
- * // `valueOf` triggers the rest of the recursion.
- * expect(is1000000Even.valueOf()).toBe(true);
- * expect(isOdd).toHaveBeenCalledTimes(500000);
- * expect(isEven).toHaveBeenCalledTimes(500001);
- *
- * isEven.mockClear();
- * isOdd.mockClear();
  *
  * // `isOdd` is called, in which `parasitic(() => isEven(n - 1))` triggers the
  * // rest of the recursion immediately.
