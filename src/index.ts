@@ -223,12 +223,13 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * import { lazy } from 'tail-call-proxy';
  *
  * let counter = 0;
- *
- * // No error is thrown, given the underlying object have not been created yet.
  * const lazyError: Record<string, unknown> = lazy(() => {
  *   counter++;
  *   throw new Error();
  * });
+ *
+ * // No error is thrown, given that the underlying object have not been created
+ * // yet.
  * expect(counter).toBe(0);
  *
  * expect(() => lazyError.toString()).toThrow();
