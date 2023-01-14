@@ -219,15 +219,19 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
  *
- * // No error is thrown, given the underlying object have not been created yet.
- * const lazyError: Record<string, unknown> = lazy(() => {
- *  throw new Error();
+ * const initializer = jest.fn(() => {
+ *   throw new Error();
  * });
  *
- * expect(() => lazyError.toString()).toThrow();
+ * // No error is thrown, given the underlying object have not been created yet.
+ * const lazyError: Record<string, unknown> = lazy(initializer);
+ * expect(initializer).not.toHaveBeenCalled();
  *
- * // The same error instance
+ * expect(() => lazyError.toString()).toThrow();
+ * expect(initializer).toHaveBeenCalledTimes(1);
+ *
  * expect(() => lazyError.toLocaleString()).toThrow();
+ * expect(initializer).toHaveBeenCalledTimes(1);
  * ```
  *
  * @example
@@ -330,7 +334,7 @@ export function lazy<T extends object>(tailCall: () => T): T {
  *   // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
  *   // `isOdd` immediately.
  *   const is1000000Even = isEven(1000000);
- *   expect(isOdd).toHaveBeenCalledTimes(0);
+ *   expect(isOdd).not.toHaveBeenCalled();
  *   expect(isEven).toHaveBeenCalledTimes(1);
  *
  *   // `valueOf` triggers the rest of the recursion.
