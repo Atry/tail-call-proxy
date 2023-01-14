@@ -287,7 +287,7 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * Performs a tail call as soon as possible.
  *
  * @returns either directly the object returned by `tailCall`, or a proxy
- * object if there is any other running tail calls. When a proxy object is
+ * object if there are any other running tail calls. When a proxy object is
  * returned, the underlying object will be created after all the previous tail
  * calls are finished.
  *
