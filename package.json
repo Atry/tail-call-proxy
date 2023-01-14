@@ -1,6 +1,6 @@
 {
   "name": "tail-call-proxy",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A template for creating npm packages using TypeScript and VSCode",
   "main": "./lib/index.js",
   "files": [
