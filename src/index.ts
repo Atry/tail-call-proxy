@@ -214,6 +214,24 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
  *
  * @example
  *
+ * Note that errors thrown in the initializer will be delayed as well.
+ *
+ * ```typescript doctest
+ * import { lazy } from 'tail-call-proxy';
+ *
+ * // No error is thrown, given the underlying object have not been created yet.
+ * const lazyError: Record<string, unknown> = lazy(() => {
+ *  throw new Error();
+ * });
+ *
+ * expect(() => lazyError.toString()).toThrow();
+ *
+ * // The same error instance
+ * expect(() => lazyError.toLocaleString()).toThrow();
+ * ```
+ *
+ * @example
+ *
  * The following mutual recursive functions would result in stack overflow:
  *
  * ```typescript doctest
