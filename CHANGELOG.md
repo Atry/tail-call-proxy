@@ -1,3 +1,19 @@
+## [1.1.5](https://github.com/Atry/tail-call-proxy/compare/v1.1.4...v1.1.5) (2023-01-14)
+
+
+### Bug Fixes
+
+* let the proxy mimic more behavior ([1a96c0a](https://github.com/Atry/tail-call-proxy/commit/1a96c0ab38f80449238da390058b32e84ec287d5))
+
+
+### Dependencies and Other Build Updates
+
+* add moduleNameMapper ([a09b0d2](https://github.com/Atry/tail-call-proxy/commit/a09b0d287cb8cc9408e8a5c4fda475527ff3cbd6))
+* add modulePaths ([6be3cad](https://github.com/Atry/tail-call-proxy/commit/6be3cadd6ef2d962f0d8b886dcf759a638f93292))
+* add paths mapping ([a79b776](https://github.com/Atry/tail-call-proxy/commit/a79b7767df5ffb9d4bb1291d9621c4f521682ee0))
+* add roots setting ([031a119](https://github.com/Atry/tail-call-proxy/commit/031a119c2a8c25b6a0485c2fff90297564f45c0a))
+* remove unused settings ([#9](https://github.com/Atry/tail-call-proxy/issues/9)) ([eb538b0](https://github.com/Atry/tail-call-proxy/commit/eb538b081eba9545aa299c5315c39b0af676d574))
+
 ## [1.1.4](https://github.com/Atry/tail-call-proxy/compare/v1.1.3...v1.1.4) (2023-01-14)
 
 ## [1.1.3](https://github.com/Atry/tail-call-proxy/compare/v1.1.2...v1.1.3) (2023-01-14)

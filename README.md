@@ -161,7 +161,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:287](https://github.com/Atry/tail-call-proxy/blob/728a91e/src/index.ts#L287)
+[index.ts:315](https://github.com/Atry/tail-call-proxy/blob/1a96c0a/src/index.ts#L315)
 
 ___
 
@@ -208,10 +208,12 @@ alternately.
 import { lazy, parasitic } from 'tail-call-proxy';
 
 let isEvenCounter = 0;
+const trueObject = new Boolean(true);
+const falseObject = new Boolean(false);
 function isEven(n: number): Boolean {
   isEvenCounter++;
   if (n === 0) {
-    return new Boolean(true);
+    return trueObject;
   }
   return lazy(() => isOdd(n - 1));
 };
@@ -220,7 +222,7 @@ let isOddCounter = 0;
 function isOdd(n: number): Boolean {
   isOddCounter++;
   if (n === 0) {
-    return new Boolean(false);
+    return falseObject;
   }
   return parasitic(() => isEven(n - 1));
 };
@@ -236,6 +238,11 @@ try {
   expect(is1000000Even.valueOf()).toBe(true);
   expect(isOddCounter).toBe(500000);
   expect(isEvenCounter).toBe(500001);
+
+  // `is1000000Even` is a lazy proxy backed by `trueObject`, not the exactly
+  // same object of `trueObject`.
+  expect(is1000000Even).not.toStrictEqual(trueObject);
+  expect(is1000000Even).toEqual(trueObject);
 } finally {
   isEvenCounter = 0;
   isOddCounter = 0;
@@ -249,6 +256,10 @@ expect(isEvenCounter).toBe(500000);
 expect(is1000000Odd.valueOf()).toBe(false);
 expect(isOddCounter).toBe(500001);
 expect(isEvenCounter).toBe(500000);
+
+// `is1000000Odd` is exactly the same object of `falseObject`, not a lazy
+// proxy.
+expect(is1000000Odd).toStrictEqual(falseObject);
 ```
 
 #### Type parameters
@@ -269,4 +280,4 @@ expect(isEvenCounter).toBe(500000);
 
 #### Defined in
 
-[index.ts:376](https://github.com/Atry/tail-call-proxy/blob/728a91e/src/index.ts#L376)
+[index.ts:415](https://github.com/Atry/tail-call-proxy/blob/1a96c0a/src/index.ts#L415)
