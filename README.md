@@ -60,7 +60,7 @@ the second access would not trigger the `initializer`.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-var counter = 0;
+let counter = 0;
 const lazyObject = lazy(() => {
   counter++;
   return { hello: 'world' };
@@ -81,13 +81,14 @@ Note that errors thrown in the initializer will be delayed as well.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-var counter = 0;
-
-// No error is thrown, given the underlying object have not been created yet.
+let counter = 0;
 const lazyError: Record<string, unknown> = lazy(() => {
   counter++;
   throw new Error();
 });
+
+// No error is thrown, given that the underlying object have not been created
+// yet.
 expect(counter).toBe(0);
 
 expect(() => lazyError.toString()).toThrow();
@@ -160,7 +161,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:286](https://github.com/Atry/tail-call-proxy/blob/e7250d7/src/index.ts#L286)
+[index.ts:287](https://github.com/Atry/tail-call-proxy/blob/bd1d28a/src/index.ts#L287)
 
 ___
 
@@ -268,4 +269,4 @@ calls are finished.
 
 #### Defined in
 
-[index.ts:375](https://github.com/Atry/tail-call-proxy/blob/e7250d7/src/index.ts#L375)
+[index.ts:376](https://github.com/Atry/tail-call-proxy/blob/bd1d28a/src/index.ts#L376)
