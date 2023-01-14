@@ -48,8 +48,8 @@ Delayed initialized objects that support tail-call optimization.
 Returns an proxy object whose underlying object will be lazily created
 at the first time its properties or methods are used.
 
-`lazy` can eliminate tail calls, preventing stack overflow errors for in
-tail recursive functions or mutual recursive functions.
+`lazy` can eliminate tail calls, preventing stack overflow errors in  tail
+recursive functions or mutual recursive functions.
 
 **`Example`**
 
@@ -156,7 +156,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/a88f607/src/index.ts#L282)
+[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/f68982f/src/index.ts#L282)
 
 ___
 
@@ -252,4 +252,4 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 
 #### Defined in
 
-[index.ts:359](https://github.com/Atry/tail-call-proxy/blob/a88f607/src/index.ts#L359)
+[index.ts:359](https://github.com/Atry/tail-call-proxy/blob/f68982f/src/index.ts#L359)
