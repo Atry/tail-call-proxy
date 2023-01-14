@@ -60,15 +60,18 @@ the second access would not trigger the `initializer`.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => ({ hello: 'world' }));
-const lazyObject = lazy(initializer);
-expect(initializer).not.toHaveBeenCalled();
+var counter = 0;
+const lazyObject = lazy(() => {
+  counter++;
+  return { hello: 'world' };
+});
+expect(counter).toBe(0);
 
 expect(lazyObject.hello).toBe('world');
-expect(initializer).toHaveBeenCalledTimes(1);
+expect(counter).toBe(1);
 
 expect(lazyObject.hello).toBe('world');
-expect(initializer).toHaveBeenCalledTimes(1);
+expect(counter).toBe(1);
 ```
 
 **`Example`**
@@ -78,19 +81,20 @@ Note that errors thrown in the initializer will be delayed as well.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => {
-  throw new Error();
-});
+var counter = 0;
 
 // No error is thrown, given the underlying object have not been created yet.
-const lazyError: Record<string, unknown> = lazy(initializer);
-expect(initializer).not.toHaveBeenCalled();
+const lazyError: Record<string, unknown> = lazy(() => {
+  counter++;
+  throw new Error();
+});
+expect(counter).toBe(0);
 
 expect(() => lazyError.toString()).toThrow();
-expect(initializer).toHaveBeenCalledTimes(1);
+expect(counter).toBe(1);
 
 expect(() => lazyError.toLocaleString()).toThrow();
-expect(initializer).toHaveBeenCalledTimes(1);
+expect(counter).toBe(1);
 ```
 
 **`Example`**
@@ -156,7 +160,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:282](https://github.com/Atry/tail-call-proxy/blob/104611f/src/index.ts#L282)
+[index.ts:286](https://github.com/Atry/tail-call-proxy/blob/e7250d7/src/index.ts#L286)
 
 ___
 
@@ -174,15 +178,18 @@ possible:
 ```typescript doctest
 import { parasitic } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => ({ hello: 'world' }));
-const lazyObject = parasitic(initializer);
-expect(initializer).toHaveBeenCalledTimes(1);
+let counter = 0;
+const lazyObject = parasitic(() => {
+  counter++;
+  return { hello: 'world' };
+});
+expect(counter).toBe(1);
 
 expect(lazyObject.hello).toBe('world');
-expect(initializer).toHaveBeenCalledTimes(1);
+expect(counter).toBe(1);
 
 expect(lazyObject.hello).toBe('world');
-expect(initializer).toHaveBeenCalledTimes(1);
+expect(counter).toBe(1);
 ```
 
 **`Example`**
@@ -193,44 +200,49 @@ alternately.
 
 ```typescript doctest
 import { lazy, parasitic } from 'tail-call-proxy';
-const isEven = jest.fn(function(n: number): Boolean {
+
+let isEvenCounter = 0;
+function isEven(n: number): Boolean {
+  isEvenCounter++;
   if (n === 0) {
     return new Boolean(true);
   }
   return lazy(() => isOdd(n - 1));
-});
+};
 
-const isOdd = jest.fn(function(n: number): Boolean {
+let isOddCounter = 0;
+function isOdd(n: number): Boolean {
+  isOddCounter++;
   if (n === 0) {
     return new Boolean(false);
   }
   return parasitic(() => isEven(n - 1));
-});
+};
 
 try {
   // `isEven` is called, but `lazy(() => isOdd(n - 1))` does not trigger
   // `isOdd` immediately.
   const is1000000Even = isEven(1000000);
-  expect(isOdd).not.toHaveBeenCalled();
-  expect(isEven).toHaveBeenCalledTimes(1);
+  expect(isOddCounter).toBe(0);
+  expect(isEvenCounter).toBe(1);
 
   // `valueOf` triggers the rest of the recursion.
   expect(is1000000Even.valueOf()).toBe(true);
-  expect(isOdd).toHaveBeenCalledTimes(500000);
-  expect(isEven).toHaveBeenCalledTimes(500001);
+  expect(isOddCounter).toBe(500000);
+  expect(isEvenCounter).toBe(500001);
 } finally {
-  isEven.mockClear();
-  isOdd.mockClear();
+  isEvenCounter = 0;
+  isOddCounter = 0;
 }
 
 // `isOdd` is called, in which `parasitic(() => isEven(n - 1))` triggers the
 // rest of the recursion immediately.
 const is1000000Odd = isOdd(1000000);
-expect(isOdd).toHaveBeenCalledTimes(500001);
-expect(isEven).toHaveBeenCalledTimes(500000);
+expect(isOddCounter).toBe(500001);
+expect(isEvenCounter).toBe(500000);
 expect(is1000000Odd.valueOf()).toBe(false);
-expect(isOdd).toHaveBeenCalledTimes(500001);
-expect(isEven).toHaveBeenCalledTimes(500000);
+expect(isOddCounter).toBe(500001);
+expect(isEvenCounter).toBe(500000);
 ```
 
 #### Type parameters
@@ -256,4 +268,4 @@ calls are finished.
 
 #### Defined in
 
-[index.ts:363](https://github.com/Atry/tail-call-proxy/blob/104611f/src/index.ts#L363)
+[index.ts:375](https://github.com/Atry/tail-call-proxy/blob/e7250d7/src/index.ts#L375)
