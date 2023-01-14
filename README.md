@@ -60,9 +60,9 @@ the second access would not trigger the `initializer`.
 ```typescript doctest
 import { lazy } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => ({ hello: 'world' }))
+const initializer = jest.fn(() => ({ hello: 'world' }));
 const lazyObject = lazy(initializer);
-expect(initializer).not.toHaveBeenCalled()
+expect(initializer).not.toHaveBeenCalled();
 
 expect(lazyObject.hello).toBe('world');
 expect(initializer).toHaveBeenCalledTimes(1);
@@ -134,7 +134,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/a8ca06c/src/index.ts#L260)
+[index.ts:260](https://github.com/Atry/tail-call-proxy/blob/25ec6a7/src/index.ts#L260)
 
 ___
 
@@ -153,9 +153,9 @@ possible:
 ```typescript doctest
 import { parasitic } from 'tail-call-proxy';
 
-const initializer = jest.fn(() => ({ hello: 'world' }))
+const initializer = jest.fn(() => ({ hello: 'world' }));
 const lazyObject = parasitic(initializer);
-expect(initializer).toHaveBeenCalledTimes(1)
+expect(initializer).toHaveBeenCalledTimes(1);
 
 expect(lazyObject.hello).toBe('world');
 expect(initializer).toHaveBeenCalledTimes(1);
@@ -230,4 +230,4 @@ expect(isEven).toHaveBeenCalledTimes(500000);
 
 #### Defined in
 
-[index.ts:337](https://github.com/Atry/tail-call-proxy/blob/a8ca06c/src/index.ts#L337)
+[index.ts:337](https://github.com/Atry/tail-call-proxy/blob/25ec6a7/src/index.ts#L337)
