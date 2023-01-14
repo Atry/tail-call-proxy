@@ -184,7 +184,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
   );
 
 /**
- * Returns an proxy object whose underlying object will be lazily created
+ * Returns an proxy object backed by `tailCall`, which will be lazily created
  * at the first time its properties or methods are used.
  *
  * `lazy` can eliminate tail calls, preventing stack overflow errors in tail
@@ -291,10 +291,10 @@ export function lazy<T extends object>(tailCall: () => T): T {
 /**
  * Performs a tail call as soon as possible.
  *
- * @returns either directly the object returned by `tailCall`, or a proxy
- * object if there are any other running tail calls. When a proxy object is
- * returned, the underlying object will be created after all the previous tail
- * calls are finished.
+ * `parasitic` returns either exactly the object returned by `tailCall`, or a
+ * proxy object backed by the object returned by `tailCall`, if there are any
+ * previously started pending tail calls. In the latter case, the underlying
+ * object will be created after all the previous tail calls are finished.
  *
  * @param tailCall the function to create the underlying object
  *
@@ -307,16 +307,16 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * import { parasitic } from 'tail-call-proxy';
  *
  * let counter = 0;
- * const lazyObject = parasitic(() => {
+ * const parasiticObject = parasitic(() => {
  *   counter++;
  *   return { hello: 'world' };
  * });
  * expect(counter).toBe(1);
  *
- * expect(lazyObject.hello).toBe('world');
+ * expect(parasiticObject.hello).toBe('world');
  * expect(counter).toBe(1);
  *
- * expect(lazyObject.hello).toBe('world');
+ * expect(parasiticObject.hello).toBe('world');
  * expect(counter).toBe(1);
  * ```
  *
