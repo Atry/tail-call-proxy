@@ -1,7 +1,3 @@
-const { pathsToModuleNameMapper } = require('ts-jest');
-const requireJSON5 = require('require-json5');
-const { compilerOptions } = requireJSON5('./tsconfig.json');
-
 module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/test/**/*.spec.ts', '**/test/**/*.test.ts'],
