@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import { prototype } from 'events';
-
 /**
  * Delayed initialized objects that support tail-call optimization.
  *
