@@ -177,7 +177,7 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
                       case 'undefined':
                         switch (propertyKey) {
                           case Symbol.toStringTag: {
-                            const prototype: unknown =
+                            const prototype: undefined | Record<any, unknown> =
                               Object.getPrototypeOf(result);
                             const constructor: unknown = prototype?.constructor;
                             if (typeof constructor === 'function') {
