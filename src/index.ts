@@ -29,6 +29,16 @@
  * @module
  */
 
+import {
+  getTarget,
+  AllowGetTarget,
+  Mapped,
+  DefaultToPrimitive,
+  DefaultToStringTag,
+  TargetAsThis,
+} from 'proxy-handler-decorators';
+import { DefaultProxyHandler } from 'default-proxy-handler';
+
 type ProxyTarget<T extends object> = {
   tailCall?: () => T;
   tail?: ProxyTarget<T>;
@@ -47,7 +57,15 @@ function getResult<T extends object>(target: ProxyTarget<T>): T {
   }
 }
 
-const TARGET = Symbol();
+@AllowGetTarget
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+@Mapped(getResult)
+@DefaultToPrimitive
+@DefaultToStringTag
+@TargetAsThis
+class TailCallProxyHandler<T extends object> extends DefaultProxyHandler<
+  T | ProxyTarget<T>
+> {}
 
 let parasiticQueue: ProxyTarget<any>[] = [];
 
@@ -70,8 +88,8 @@ function step<T extends object>(target: ProxyTarget<T>): void {
     if (proxyOrResult == null) {
       target.result = proxyOrResult;
     } else {
-      const nonNullProxyOrResult: { [TARGET]?: ProxyTarget<T> } = proxyOrResult;
-      const { [TARGET]: tail } = nonNullProxyOrResult;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const tail: ProxyTarget<T> | undefined = getTarget(proxyOrResult);
       if (tail === undefined) {
         target.result = proxyOrResult;
       } else {
@@ -131,94 +149,7 @@ function run<T extends object>(target: ProxyTarget<T>): void {
   }
 }
 
-const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
-  Object.fromEntries(
-    Object.entries(Object.getOwnPropertyDescriptors(Reflect)).map(
-      ([functionName, { value }]) => {
-        switch (functionName) {
-          case 'get':
-            return [
-              functionName,
-              (
-                target: ProxyTarget<object>,
-                propertyKey: string | symbol,
-                receiver: unknown
-              ) => {
-                switch (propertyKey) {
-                  case TARGET:
-                    return target;
-                  default: {
-                    const result = getResult(target);
-                    const property: unknown = Reflect.get(
-                      result,
-                      propertyKey,
-                      receiver
-                    );
-                    switch (typeof property) {
-                      case 'function': {
-                        const wrappedFunction = function (
-                          this: any,
-                          ...argArray: any[]
-                        ): unknown {
-                          return Reflect.apply(
-                            property,
-                            this === receiver ? result : this,
-                            argArray
-                          );
-                        };
-                        Object.defineProperty(wrappedFunction, 'name', {
-                          value: property.name,
-                          writable: false,
-                        });
-                        return wrappedFunction;
-                      }
-                      case 'undefined':
-                        switch (propertyKey) {
-                          case Symbol.toStringTag: {
-                            const prototype: undefined | Record<any, unknown> =
-                              Object.getPrototypeOf(result);
-                            const constructor: unknown = prototype?.constructor;
-                            if (typeof constructor === 'function') {
-                              return constructor.name;
-                            } else {
-                              return;
-                            }
-                          }
-                          case Symbol.toPrimitive:
-                            return (hint: 'string' | 'number' | 'default') => {
-                              switch (hint) {
-                                case 'string':
-                                  return String(result);
-                                case 'number':
-                                  return Number(result);
-                                case 'default':
-                                  return result.valueOf();
-                              }
-                            };
-                          default:
-                            return property;
-                        }
-                      default:
-                        return property;
-                    }
-                  }
-                }
-              },
-            ];
-          default:
-            return [
-              functionName,
-              (target: ProxyTarget<object>, ...args: any) =>
-                (value as (target: any, ...args: any) => unknown)(
-                  getResult(target),
-                  ...args
-                ),
-            ];
-        }
-      }
-    )
-  );
-
+const LAZY_PROXY_HANDLER = new TailCallProxyHandler();
 /**
  * Returns an proxy object backed by `tailCall`, which will be lazily created
  * at the first time its properties or methods are used.

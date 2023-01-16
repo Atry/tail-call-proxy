@@ -167,5 +167,9 @@
       ],
       "@semantic-release/github"
     ]
+  },
+  "dependencies": {
+    "default-proxy-handler": "^1.0.0",
+    "proxy-handler-decorators": "^1.0.1"
   }
 }
