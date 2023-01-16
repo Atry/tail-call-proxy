@@ -53,6 +53,7 @@
   "keywords": [
     "tail",
     "tail-call",
+    "tailcall",
     "proxy",
     "lazy",
     "utility",
