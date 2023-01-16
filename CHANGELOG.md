@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/Atry/tail-call-proxy/compare/v1.1.6...v1.1.7) (2023-01-16)
+
+
+### Bug Fixes
+
+* remove unused imports ([843317f](https://github.com/Atry/tail-call-proxy/commit/843317f8f7dacbe3d107c605094d6e7017af4e9e))
+
 ## [1.1.6](https://github.com/Atry/tail-call-proxy/compare/v1.1.5...v1.1.6) (2023-01-16)
 
 
