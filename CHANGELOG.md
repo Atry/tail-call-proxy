@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/Atry/tail-call-proxy/compare/v1.1.7...v1.1.8) (2023-01-16)
+
+
+### Dependencies and Other Build Updates
+
+* **deps:** update prettier ([e97b441](https://github.com/Atry/tail-call-proxy/commit/e97b44186a413bb3b2b2241300bd28de7284e2d0))
+
 ## [1.1.7](https://github.com/Atry/tail-call-proxy/compare/v1.1.6...v1.1.7) (2023-01-16)
 
 
