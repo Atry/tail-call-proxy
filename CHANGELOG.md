@@ -1,3 +1,11 @@
+## [1.1.6](https://github.com/Atry/tail-call-proxy/compare/v1.1.5...v1.1.6) (2023-01-16)
+
+
+### Bug Fixes
+
+* a type checking error ([e0aaeaf](https://github.com/Atry/tail-call-proxy/commit/e0aaeaf93499940a2751cfa209bd84f5309fce50))
+* use getPrototypeOf to implement toStringTag ([83a1d41](https://github.com/Atry/tail-call-proxy/commit/83a1d411ed71599cc7f69616193d9d06daaaf952))
+
 ## [1.1.5](https://github.com/Atry/tail-call-proxy/compare/v1.1.4...v1.1.5) (2023-01-14)
 
 
