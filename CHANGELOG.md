@@ -1,3 +1,10 @@
+## [1.1.9](https://github.com/Atry/tail-call-proxy/compare/v1.1.8...v1.1.9) (2023-01-16)
+
+
+### Dependencies and Other Build Updates
+
+* **deps:** remove unused doctest-ts-improved ([7067d45](https://github.com/Atry/tail-call-proxy/commit/7067d458f33acc2459d65042133ac6cd7668db39))
+
 ## [1.1.8](https://github.com/Atry/tail-call-proxy/compare/v1.1.7...v1.1.8) (2023-01-16)
 
 

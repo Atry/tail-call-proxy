@@ -161,7 +161,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:254](https://github.com/Atry/tail-call-proxy/blob/5b35b3b/src/index.ts#L254)
+[index.ts:254](https://github.com/Atry/tail-call-proxy/blob/7067d45/src/index.ts#L254)
 
 ___
 
@@ -280,4 +280,4 @@ expect(is1000000Odd).toStrictEqual(falseObject);
 
 #### Defined in
 
-[index.ts:354](https://github.com/Atry/tail-call-proxy/blob/5b35b3b/src/index.ts#L354)
+[index.ts:354](https://github.com/Atry/tail-call-proxy/blob/7067d45/src/index.ts#L354)
