@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
+import { prototype } from 'events';
+
 /**
  * Delayed initialized objects that support tail-call optimization.
  *
@@ -174,8 +176,16 @@ const LAZY_PROXY_HANDLER: ProxyHandler<ProxyTarget<object>> =
                       }
                       case 'undefined':
                         switch (propertyKey) {
-                          case Symbol.toStringTag:
-                            return result.constructor.name;
+                          case Symbol.toStringTag: {
+                            const prototype: unknown =
+                              Object.getPrototypeOf(result);
+                            const constructor: unknown = prototype?.constructor;
+                            if (typeof constructor === 'function') {
+                              return constructor.name;
+                            } else {
+                              return;
+                            }
+                          }
                           case Symbol.toPrimitive:
                             return (hint: 'string' | 'number' | 'default') => {
                               switch (hint) {
