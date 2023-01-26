@@ -53,8 +53,8 @@ recursive functions or mutual recursive functions.
 
 **`Example`**
 
-The initializer passed to `lazy` should not be called until the first to
-access `lazyObject.hello`. When `lazyObject.hello` is accessed more than
+The initializer passed to `lazy` should not be called until the first time
+`lazyObject.hello` is accessed. When `lazyObject.hello` is accessed more than
 once, the second access would not trigger the initializer again.
 
 ```typescript doctest
@@ -161,7 +161,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:254](https://github.com/Atry/tail-call-proxy/blob/69b8bd6/src/index.ts#L254)
+[index.ts:254](https://github.com/Atry/tail-call-proxy/blob/f08f7b0/src/index.ts#L254)
 
 ___
 
@@ -280,4 +280,4 @@ expect(is1000000Odd).toStrictEqual(falseObject);
 
 #### Defined in
 
-[index.ts:354](https://github.com/Atry/tail-call-proxy/blob/69b8bd6/src/index.ts#L354)
+[index.ts:354](https://github.com/Atry/tail-call-proxy/blob/f08f7b0/src/index.ts#L354)
