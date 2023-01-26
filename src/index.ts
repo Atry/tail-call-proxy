@@ -161,9 +161,9 @@ const LAZY_PROXY_HANDLER = new TailCallProxyHandler();
  *
  * @example
  *
- * The `initializer` should not be called until the first to access
- * `lazyObject.hello`. When `lazyObject.hello` is accessed more than once,
- * the second access would not trigger the `initializer`.
+ * The initializer passed to `lazy` should not be called until the first to
+ * access `lazyObject.hello`. When `lazyObject.hello` is accessed more than
+ * once, the second access would not trigger the initializer again.
  *
  * ```typescript doctest
  * import { lazy } from 'tail-call-proxy';
