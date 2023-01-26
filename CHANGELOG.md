@@ -1,3 +1,10 @@
+## [1.1.10](https://github.com/Atry/tail-call-proxy/compare/v1.1.9...v1.1.10) (2023-01-26)
+
+
+### Dependencies and Other Build Updates
+
+* add a keyword ([9707415](https://github.com/Atry/tail-call-proxy/commit/9707415925277f4eee68ff1c52e7769a5087d3c3))
+
 ## [1.1.9](https://github.com/Atry/tail-call-proxy/compare/v1.1.8...v1.1.9) (2023-01-16)
 
 
