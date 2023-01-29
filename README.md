@@ -103,7 +103,6 @@ expect(counter).toBe(1);
 The following mutual recursive functions would result in stack overflow:
 
 ```typescript doctest
-import { lazy } from 'tail-call-proxy';
 function isEven(n: number): Boolean {
   if (n === 0) {
     return new Boolean(true);
@@ -161,7 +160,7 @@ expect(isOdd(1000000).valueOf()).toBe(false);
 
 #### Defined in
 
-[index.ts:254](https://github.com/Atry/tail-call-proxy/blob/f08f7b0/src/index.ts#L254)
+[index.ts:253](https://github.com/Atry/tail-call-proxy/blob/1d1f6c9/src/index.ts#L253)
 
 ___
 
@@ -209,7 +208,6 @@ import { lazy, parasitic } from 'tail-call-proxy';
 
 let isEvenCounter = 0;
 const trueObject = new Boolean(true);
-const falseObject = new Boolean(false);
 function isEven(n: number): Boolean {
   isEvenCounter++;
   if (n === 0) {
@@ -219,6 +217,7 @@ function isEven(n: number): Boolean {
 };
 
 let isOddCounter = 0;
+const falseObject = new Boolean(false);
 function isOdd(n: number): Boolean {
   isOddCounter++;
   if (n === 0) {
@@ -280,4 +279,4 @@ expect(is1000000Odd).toStrictEqual(falseObject);
 
 #### Defined in
 
-[index.ts:354](https://github.com/Atry/tail-call-proxy/blob/f08f7b0/src/index.ts#L354)
+[index.ts:353](https://github.com/Atry/tail-call-proxy/blob/1d1f6c9/src/index.ts#L353)
