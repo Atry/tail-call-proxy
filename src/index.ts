@@ -211,7 +211,6 @@ const LAZY_PROXY_HANDLER = new TailCallProxyHandler();
  * The following mutual recursive functions would result in stack overflow:
  *
  * ```typescript doctest
- * import { lazy } from 'tail-call-proxy';
  * function isEven(n: number): Boolean {
  *   if (n === 0) {
  *     return new Boolean(true);
@@ -298,7 +297,6 @@ export function lazy<T extends object>(tailCall: () => T): T {
  *
  * let isEvenCounter = 0;
  * const trueObject = new Boolean(true);
- * const falseObject = new Boolean(false);
  * function isEven(n: number): Boolean {
  *   isEvenCounter++;
  *   if (n === 0) {
@@ -308,6 +306,7 @@ export function lazy<T extends object>(tailCall: () => T): T {
  * };
  *
  * let isOddCounter = 0;
+ * const falseObject = new Boolean(false);
  * function isOdd(n: number): Boolean {
  *   isOddCounter++;
  *   if (n === 0) {
